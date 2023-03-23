@@ -24,11 +24,11 @@ class _BooksScreenState extends State<BooksScreen> {
 }
 
 Widget? buildListItems(List<String> books, int index) {
-  return Container(
-    color: Colors.amberAccent,
+  return SizedBox(
     height: 55,
     width: 200,
     child: Card(
+      color: Colors.amberAccent,
       elevation: 7,
       child: Text(
         books[index],

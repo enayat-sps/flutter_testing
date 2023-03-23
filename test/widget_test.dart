@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_testing/screens/login_screen.dart';
+import 'package:flutter_testing/screens/books_screen.dart';
 
 void main() {
   // testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -27,7 +27,7 @@ void main() {
   //   expect(find.text('1'), findsOneWidget);
   // });
   group('BooksScreen', () {
-    testWidgets('should not scroll with less items', (widgetTester) async {
+    testWidgets('Should not scroll with less items', (widgetTester) async {
       await widgetTester.pumpWidget(MaterialApp(
         home: BooksScreen(
           books: List.generate(10, (index) => 'Books $index'),
@@ -39,7 +39,7 @@ void main() {
       expect(firstBook, findsOneWidget);
     });
 
-    testWidgets('should scroll with lot of items', (widgetTester) async {
+    testWidgets('Should scroll with lot of items', (widgetTester) async {
       await widgetTester.pumpWidget(MaterialApp(
         home: BooksScreen(
           books: List.generate(100, (index) => 'Books $index'),
@@ -55,7 +55,7 @@ void main() {
       expect(cardFinder, findsNWidgets(11));
     });
 
-    testWidgets('should show 2 items on small device', (widgetTester) async {
+    testWidgets('Should show 2 items on small device', (widgetTester) async {
       widgetTester.binding.window.physicalSizeTestValue = const Size(320, 350);
       await widgetTester.pumpWidget(MaterialApp(
         home: BooksScreen(
@@ -68,7 +68,7 @@ void main() {
       expect(cardFinder, findsNWidgets(2));
     });
 
-    testWidgets('should show error if list is empty', (widgetTester) async {
+    testWidgets('Should show error if list is empty', (widgetTester) async {
       await widgetTester.pumpWidget(const MaterialApp(
         home: BooksScreen(
           books: [],
