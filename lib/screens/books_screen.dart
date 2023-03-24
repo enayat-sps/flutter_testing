@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_testing/configs/routes.dart';
 
 class BooksScreen extends StatefulWidget {
   const BooksScreen({Key? key, required this.books}) : super(key: key);
   final List<String> books;
+
+  static const routeName = AppRoutes.booksScreen;
+
   @override
   State<BooksScreen> createState() => _BooksScreenState();
 }
@@ -23,7 +27,7 @@ class _BooksScreenState extends State<BooksScreen> {
   }
 }
 
-Widget? buildListItems(List<String> books, int index) {
+Widget buildListItems(List<String> books, int index) {
   return SizedBox(
     height: 55,
     width: 200,

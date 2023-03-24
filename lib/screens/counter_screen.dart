@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_testing/configs/routes.dart';
 import 'package:flutter_testing/screens/books_screen.dart';
 
 class CounterScreen extends StatefulWidget {
   const CounterScreen({super.key});
+
+  static const routeName = AppRoutes.counterScreen;
 
   @override
   State<CounterScreen> createState() => _CounterScreenState();
@@ -12,6 +17,8 @@ class _CounterScreenState extends State<CounterScreen> {
   int _counter = 0;
   int _redoCount = 0;
   bool undo = false;
+  late Timer _timer;
+
   final zeroCounterSnack = const SnackBar(
     content: Text('Counter is already at 0'),
     showCloseIcon: true,
@@ -25,6 +32,18 @@ class _CounterScreenState extends State<CounterScreen> {
     });
   }
 
+  void _longIncrement() {
+    _timer = Timer.periodic(
+        const Duration(
+          milliseconds: 200,
+        ), (timer) {
+      setState(() {
+        _counter++;
+        _redoCount == _counter;
+      });
+    });
+  }
+
   void _decrementCounter() {
     if (_counter != 0) {
       _counter--;
@@ -33,6 +52,20 @@ class _CounterScreenState extends State<CounterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(zeroCounterSnack);
     }
     setState(() {});
+  }
+
+  void _longDecrement() {
+    _timer = Timer.periodic(
+        const Duration(
+          milliseconds: 200,
+        ), (timer) {
+      setState(() {
+        if (_counter != 0) {
+          _counter--;
+          _redoCount == _counter;
+        }
+      });
+    });
   }
 
   void _resetCounter() async {
@@ -96,15 +129,19 @@ class _CounterScreenState extends State<CounterScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    height: 60,
-                    child: ElevatedButton(
-                      onPressed: _decrementCounter,
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        elevation: 10,
+                  GestureDetector(
+                    onLongPress: _longDecrement,
+                    onLongPressEnd: (details) => _timer.cancel(),
+                    child: SizedBox(
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: _decrementCounter,
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          elevation: 10,
+                        ),
+                        child: const Icon(Icons.exposure_minus_1),
                       ),
-                      child: const Icon(Icons.exposure_minus_1),
                     ),
                   ),
                   SizedBox(
@@ -118,15 +155,19 @@ class _CounterScreenState extends State<CounterScreen> {
                       child: const Icon(Icons.undo),
                     ),
                   ),
-                  SizedBox(
-                    height: 60,
-                    child: ElevatedButton(
-                      onPressed: _incrementCounter,
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        elevation: 10,
+                  GestureDetector(
+                    onLongPress: _longIncrement,
+                    onLongPressEnd: (details) => _timer.cancel(),
+                    child: SizedBox(
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: _incrementCounter,
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          elevation: 10,
+                        ),
+                        child: const Icon(Icons.exposure_plus_1),
                       ),
-                      child: const Icon(Icons.exposure_plus_1),
                     ),
                   ),
                 ],
@@ -137,5 +178,11 @@ class _CounterScreenState extends State<CounterScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 }
