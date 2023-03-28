@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_testing/configs/constants.dart';
 import 'package:flutter_testing/configs/routes.dart';
 import '../models/favorites_model.dart';
 import 'package:provider/provider.dart';
@@ -12,31 +13,38 @@ class FavoritesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: Consumer<FavoritesModel>(
-        builder: (context, value, child) => ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          itemCount: value.itemsList.length,
-          itemBuilder: (context, index) {
-            return FavoriteListTile(
-              item: value.itemsList[index],
-            );
-          },
-        ),
+        builder: (context, value, child) => value.itemsList.isEmpty
+            ? Center(
+                child: Text(
+                  noFavorite,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                itemCount: value.itemsList.length,
+                itemBuilder: (context, index) {
+                  return FavoriteListTile(
+                    itemNo: value.itemsList[index],
+                  );
+                },
+              ),
       ),
     );
   }
 }
 
 class FavoriteListTile extends StatelessWidget {
-  const FavoriteListTile({this.item, Key? key}) : super(key: key);
-  final int? item;
+  const FavoriteListTile({this.itemNo, Key? key}) : super(key: key);
+  final int? itemNo;
 
   @override
   Widget build(BuildContext context) {
     final favoriteProvider =
         Provider.of<FavoritesModel>(context, listen: false);
 
-    const removedMessage = SnackBar(
-      content: Text('Removed from favorites.'),
+    const removedMessageSnack = SnackBar(
+      content: Text(favoriteRemoved),
       duration: Duration(seconds: 1),
     );
 
@@ -44,18 +52,18 @@ class FavoriteListTile extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: Colors.primaries[item! % Colors.primaries.length],
+          backgroundColor: Colors.primaries[itemNo! % Colors.primaries.length],
         ),
         title: Text(
-          'Item $item',
+          '$itemTitle $itemNo',
           key: Key(
-            item.toString(),
+            itemNo.toString(),
           ),
         ),
         trailing: IconButton(
           onPressed: () {
-            favoriteProvider.remove(item!);
-            ScaffoldMessenger.of(context).showSnackBar(removedMessage);
+            favoriteProvider.remove(itemNo!);
+            ScaffoldMessenger.of(context).showSnackBar(removedMessageSnack);
           },
           icon: const Icon(Icons.delete),
         ),

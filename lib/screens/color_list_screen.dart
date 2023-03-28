@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_testing/configs/constants.dart';
 import 'package:flutter_testing/configs/routes.dart';
 import 'package:flutter_testing/models/favorites_model.dart';
 import 'package:flutter_testing/screens/favorites_screen.dart';
@@ -13,7 +14,7 @@ class ColorListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Colors List'),
+        title: const Text(colorListScreenTitle),
         actions: [
           TextButton.icon(
             onPressed: () {
@@ -24,8 +25,12 @@ class ColorListScreen extends StatelessWidget {
               color: Theme.of(context).iconTheme.color,
             ),
             label: const Text(
-              'Favorites',
-              style: TextStyle(color: Colors.white, fontSize: 17),
+              favoritesText,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.bold
+              ),
             ),
           ),
         ],
@@ -48,7 +53,7 @@ class ColorListScreen extends StatelessWidget {
           backgroundColor: Colors.primaries[itemNo % Colors.primaries.length],
         ),
         title: Text(
-          'Item $itemNo',
+          '$itemTitle $itemNo',
           key: Key(itemNo.toString()),
         ),
         trailing: IconButton(
@@ -58,14 +63,18 @@ class ColorListScreen extends StatelessWidget {
                 : favoriteProvider.remove(itemNo);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(favoriteProvider.itemsList.contains(itemNo)
-                    ? 'Added to favorites.'
-                    : 'Removed from favorites.'),
+                content: Text(
+                  favoriteProvider.itemsList.contains(itemNo)
+                      ? favoriteAdded
+                      : favoriteRemoved,
+                ),
                 duration: const Duration(seconds: 1),
               ),
             );
           },
-          key: Key(itemNo.toString()),
+          key: Key(
+            itemNo.toString(),
+          ),
           icon: favoriteProvider.itemsList.contains(itemNo)
               ? const Icon(Icons.favorite)
               : const Icon(Icons.favorite_border),
